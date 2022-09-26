@@ -16,7 +16,7 @@ setup description below.
 
 Now ``cd`` into ``acrl``.
 
-# Setting up Pyton
+# Setting up Python
 First set up the conda environment by running
 ```
 conda create -y -n acrl python=3.7
