@@ -1,0 +1,85 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|  ========= |                                                                |
+| \\       /   F ield        | OpenFOAM: The Open Source CFD Toolbox          |
+|  \\     /    O peration    | Version: 2.2.0                                 |
+|   \\   /     A nd          | Web: www.OpenFOAM.org                          |
+|    \\ /      M anipulation |                                                |
+\*---------------------------------------------------------------------------*/
+FoamFile                                                                       
+{                                                                              
+version 2.0;                                                                   
+format ascii;                                                                  
+class dictionary;                                                              
+object topoSetDict;                                                            
+}                                                                              
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+                                                                               
+actions                                                                        
+(                                                                              
+{                                                                              
+    name    transitionCellSetUpper;                                            
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  rotatedBoxToCell;                                                  
+    sourceInfo                                                                 
+    {                                                                          
+        origin (0.1 0.0649365289002239 -1);
+        i      (0.02 0.0059229143773620735 0);     
+        j      (0 0.0014736006751487414 0);     
+        k      (0 0 5);     
+    }                                                                          
+}                                                                              
+{                                                                              
+    name    transitionCellSetLower;                                            
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  rotatedBoxToCell;                                                  
+    sourceInfo                                                                 
+    {                                                                          
+        origin (0.1 -0.030061240825121755 -1);
+        i      (0.02 -0.00012836200251343383 0);     
+        j      (0 0.0005757011137757438 0);     
+        k      (0 0 5);     
+    }                                                                          
+}                                                                              
+{                                                                              
+    name    kzeroSetUpper;                                                     
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  boxToCell;                                                         
+    sourceInfo                                                                 
+    {                                                                          
+        box (-1 0 -10) (0.09000000000000001 2 10);
+    }                                                                          
+}                                                                              
+{                                                                              
+    name    kzeroSetLower;                                                     
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  boxToCell;                                                         
+    sourceInfo                                                                 
+    {                                                                          
+        box (-1 -2 -10) (0.09000000000000001 0 10); 
+    }                                                                          
+}                                                                              
+{                                                                              
+    name    intermittencySetUpper;                                             
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  boxToCell;                                                         
+    sourceInfo                                                                 
+    {                                                                          
+        box (0.1 0 -10) (150 100 10);
+    }                                                                          
+}                                                                              
+{                                                                              
+    name    intermittencySetLower;                                             
+    type    cellSet;                                                           
+    action  new;                                                               
+    source  boxToCell;                                                         
+    sourceInfo                                                                 
+    {                                                                          
+        box (0.1 -100 -10) (150 0 10);
+    }                                                                          
+}                                                                              
+);

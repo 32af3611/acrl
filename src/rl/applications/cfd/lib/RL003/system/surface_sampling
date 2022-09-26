@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|  ========= |                                                                |
+| \\       /   F ield        | OpenFOAM: The Open Source CFD Toolbox          |
+|  \\     /    O peration    | Version: 2.2.0                                 |
+|   \\   /     A nd          | Web: www.OpenFOAM.org                          |
+|    \\ /      M anipulation |                                                |
+\*---------------------------------------------------------------------------*/
+FoamFile                                                                       
+{                                                                              
+version 2.0;                                                                   
+format ascii;                                                                  
+class dictionary;                                                              
+object surface_sampling;                                                            
+}                                                                              
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "globalVariables";                                                                               
+                                                        
+    surface_sampling
+    {
+        type                surfaces;
+        libs                ("libsampling.so");
+        fields              (p wallShearStress yPlus);
+        surfaces            (
+                                suction_side
+                                {
+                                    type        patch;
+                                    patches     (suction_side);
+                                    interpolate true;
+                                }
+                                pressure_side
+                                {
+                                    type        patch;
+                                    patches     (pressure_side);
+                                    interpolate true;
+                                }
+                            
+                            );
+        
+        timeStart           $gV_steadyStateStartTime;
+        timeEnd             $gV_steadyStateEndTime;
+        executeControl      timeStep;    // take every timestep into account for calculating mean
+        writeControl        writeTime;   // write current mean (from timeStart up until this time) for every general write out step of all fields
+        surfaceFormat       raw;
+        interpolationScheme cellPointFace;
+        
+        cuttingPlane
+        {
+            type            cuttingPlane;
+            planeType       pointAndNormal;
+            pointAndNormalDict
+            {
+                basePoint    (0 0 0);
+                normalVector (0 0 1);
+            }
+            interpolate  true;
+        }
+        
+        isosurface
+        {
+            type            isoSurface;
+            interpolate     true;
+        }
+        
+        
+    }

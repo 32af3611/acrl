@@ -1,0 +1,10 @@
+#!/bin/bash
+#SBATCH --partition=dev_single
+#SBATCH --ntasks-per-node=4
+#SBATCH --time=00:10:00
+#SBATCH --mail-type=ALL
+module load cae/openfoam/7
+source /opt/bwhpc/common/cae/openfoam/7/OpenFOAM-7/etc/bashrc
+echo "Runnning in "$SLURM_SUBMIT_DIR
+python cfdControl.py
+echo "Finished."

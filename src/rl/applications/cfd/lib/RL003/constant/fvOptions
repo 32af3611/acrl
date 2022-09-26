@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// new setup
+kSourceUpper
+{
+    type            scalarSemiImplicitSource;
+    active          true;
+ 
+    scalarSemiImplicitSourceCoeffs
+    {
+        selectionMode   cellSet; // all, cellSet, cellZone, points
+        cellSet         transitionCellSetUpper;
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            k     (2e-5 0);
+        }
+    }
+}
+kSourceLower
+{
+    type            scalarSemiImplicitSource;
+    active          true;
+ 
+    scalarSemiImplicitSourceCoeffs
+    {
+        selectionMode   cellSet; // all, cellSet, cellZone, points
+        cellSet         transitionCellSetLower;
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            k     (2e-5 0);
+        }
+    }
+}//*/
+
+kZeroUpper
+{
+	type            scalarFixedValueConstraint;
+        active          yes;
+
+        selectionMode   cellSet; // all, cellSet, cellZone, points
+        cellSet         kzeroSetUpper;
+        volumeMode      absolute;
+        fieldValues
+        {
+            k           0;
+        }
+}
+kZeroLower
+{
+	type            scalarFixedValueConstraint;
+        active          yes;
+
+        selectionMode   cellSet; // all, cellSet, cellZone, points
+        cellSet         kzeroSetLower;
+        volumeMode      absolute;
+        fieldValues
+        {
+            k           0;
+        }
+}
+
+}
+
+// ************************************************************************* //

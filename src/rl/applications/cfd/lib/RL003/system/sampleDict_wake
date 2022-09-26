@@ -1,0 +1,176 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "globalVariables";
+
+//BLsamples {
+type sets;
+libs ("libsampling.so");
+// Set output format : choice of
+//      xmgr
+//      jplot
+//      gnuplot
+//      raw
+//      vtk
+//      csv
+setFormat raw;
+
+// optionally define extra controls for the output formats
+formatOptions
+{
+    ensight
+    {
+        format  ascii;
+    }
+}
+
+// interpolationScheme. choice of
+//      cell          : use cell-centre value only; constant over cells (default)
+//      cellPoint     : use cell-centre and vertex values
+//      cellPointFace : use cell-centre, vertex and face values.
+//      pointMVC      : use point values only (Mean Value Coordinates)
+//      cellPatchConstrained : use cell-centre except on boundary faces where
+//        it uses the boundary value. For use with e.g. patchCloudSet.
+// 1] vertex values determined from neighbouring cell-centre values
+// 2] face values determined using the current face interpolation scheme
+//    for the field (linear, gamma, etc.)
+interpolationScheme pointMVC;
+
+// Fields to sample. sample Re-Stresses are in order: Rxx, Rxy, Rxz, Ryy, Ryz and Rzz
+fields
+(
+    U p R
+);
+
+// Set sampling definition: choice of
+//      uniform             evenly distributed points on line
+//      face                one point per face intersection
+//      midPoint            one point per cell, inbetween two face intersections
+//      midPointAndFace     combination of face and midPoint
+//
+//      polyLine            specified points, not nessecary on line, uses
+//                          tracking
+//      cloud               specified points, uses findCell
+//      triSurfaceMeshPointSet  points of triSurface
+//
+// axis: how to write point coordinate. Choice of
+// - x/y/z: x/y/z coordinate only
+// - xyz: three columns
+//  (probably does not make sense for anything but raw)
+// - distance: distance from start of sampling line (if uses line) or
+//             distance from first specified sampling point
+//
+// type specific:
+//      uniform, face, midPoint, midPointAndFace : start and end coordinate
+//      uniform: extra number of sampling points
+//      polyLine, cloud: list of coordinates
+//      patchCloud: list of coordinates and set of patches to look for nearest
+
+// wake integration height
+h    #calc"10*$gV_l_ref"; //[m]
+		
+sets
+(
+    
+    wake$0_01$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 0.01*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.01*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+		end	    (#calc"$gV_l_ref + 0.01*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.01*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+	}
+	wake$0_02$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 0.02*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.02*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+		end	    (#calc"$gV_l_ref + 0.02*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.02*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+	}
+	wake$0_05$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 0.05*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.05*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+		end	    (#calc"$gV_l_ref + 0.05*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.05*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+	}
+    wake$0_1$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 0.1*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.1*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+		end	    (#calc"$gV_l_ref + 0.1*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.1*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.01);
+	}
+	
+	wake$0_5$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 0.5*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.5*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 0.5*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"0.5*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$1$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 1*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"1*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 1*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"1*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$2$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 2*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"2*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 2*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"2*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$5$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 5*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"5*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 5*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"5*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$10$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 10*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"10*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 10*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"10*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$20$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 20*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"20*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 20*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"20*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	wake$50$
+	{
+		type	lineFace;
+		axis	distance;
+        start	(#calc"$gV_l_ref + 50*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) + $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"50*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) - $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+		end	    (#calc"$gV_l_ref + 50*$gV_l_ref*cos((float)degToRad($gV_alpha_DEG)) - $h/2*sin((float)degToRad($gV_alpha_DEG))" #calc"50*$gV_l_ref*sin((float)degToRad($gV_alpha_DEG)) + $h/2*cos((float)degToRad($gV_alpha_DEG))" 0.5);
+	}
+	
+	
+	
+	
+	
+);

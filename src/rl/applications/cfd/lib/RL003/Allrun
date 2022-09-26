@@ -1,0 +1,40 @@
+#!/bin/sh
+set -e
+set -x
+
+cd ${0%/*} || exit 1 # Run from this directory
+
+### preprocess ###
+# Copy 0.orig directory for initial conditions
+cp -r 0.orig 0
+
+# copy template mesh:
+cp -r constant/polyMesh.orig constant/polyMesh
+# mesh (Save time: Mesh already created in template)
+#blockMesh > log.blockMesh
+#checkMesh > log.checkMesh
+#topoSet > log.topoSet
+#export FOAM_FILEHANDLER="collated" # does not work on UC
+# apply BLC via funkySetFields and again deconstruct the domain
+funkySetBoundaryField >log.funkySetBoundaryField 2>&1
+
+### run simulation ###
+decomposePar -latestTime >/dev/null
+mpirun -bind-to none -np 4 simpleFoam -parallel >/dev/null
+reconstructPar -latestTime >/dev/null
+
+rm -r processor*
+
+### postprocess ###
+# wall shear stress
+simpleFoam -postProcess -func wallShearStress -latestTime >/dev/null
+simpleFoam -postProcess -func yPlus -latestTime >/dev/null
+simpleFoam -postProcess -func surfaces -latestTime >log.postWallShearStress
+
+# force coefficients
+simpleFoam -postProcess -func forceCoeffs_object -latestTime >log.postForceCoefficients
+
+# read local quantities
+postProcess -latestTime -func surface_sampling >log.surface_sampling
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.3.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      forceCoeffsIncompressible;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Variables
+#include "../system/globalVariables"
+
+// define forceCoeffs_object
+forceCoeffs_object
+{
+	type 	forceCoeffs;
+	functionObjectLibs ("libforces.so");
+	patches (suction_side pressure_side trailing_edge);
+
+	p 	p;
+	U 	U;
+	rho         rhoInf;
+    rhoInf      $gV_rho_inf;	   // Density as free stream density
+	
+	log 	true;		           // Dump to file -- change to false to not save a file 
+
+	CofR 	(0.25 0 0);            // Centre of rotation (c/4)
+	liftDir $gV_y_;	               // Direction of lift coefficient
+	dragDir $gV_x_;		           // Direction of drag coefficient
+	pitchAxis (0 0 -1);	           // Pitch moment axis
+	magUInf $gV_U_inf;             // free stream velocity magnitude 
+	lRef $gV_l_ref;                // reference length (chord length)
+	Aref #calc "$gV_l_ref*$gV_span";    // reference area: c*span
+
+    outputControl   timeStep;
+    outputInterval  1;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1,0 +1,49 @@
+#!/bin/bash
+dirlist=(`ls postProcessing/forceCoeffs_object`)
+echo postProcessing/forceCoeffs_object/${dirlist[0]}
+
+#foamMonitor postProcessing/forceCoeffs_object/${dirlist[0]}/forceCoeffs.dat
+
+# iterate all files:
+#foamMonitor <(cat postProcessing/forceCoeffs_object/${dirlist[0]}/forceCoeffs.dat <(tail +10 postProcessing/forceCoeffs_object/${dirlist[1]}/forceCoeffs.dat ) <(tail +10 postProcessing/forceCoeffs_object/${dirlist[2]}/forceCoeffs.dat) )
+: '
+gnuplot -persist <<-EOFMarker
+    set term x11 persist
+    
+    set autoscale
+
+    set title "Force coefficients"
+    set grid
+
+    set datafile separator tabulator
+    set style data linespoints
+    
+    files = "${dirlist[*]}"
+    
+    plot 'postProcessing/forceCoeffs_object/20.005/forceCoeffs.dat' using 1:4
+    
+EOFMarker
+'
+
+gnuplot -persist <<-EOFMarker
+    set term x11 persist
+    
+    set title "Force coefficients"
+    set grid
+    set logscale x
+    
+    set ylabel 'cl'
+    set y2label 'cd'
+    set ytics nomirror
+    set y2tics
+    set yrange [-0.3:1.2]
+    set y2range [0:0.05]
+    
+    set style data linespoints
+    
+    files = "${dirlist[*]}"
+    phases = "SteadyState TransientDev TransientEval EvalAverage"
+    
+    plot for [i=1:words(files)] 'postProcessing/forceCoeffs_object/'.word(files, i).'/forceCoeffs.dat' using 1:4 title "Cl, ".word(phases, i) axes x1y1, for [i=1:words(files)] 'postProcessing/forceCoeffs_object/'.word(files, i).'/forceCoeffs.dat' using 1:3 title "Cd, ".word(phases, i) axes x1y2
+    
+EOFMarker

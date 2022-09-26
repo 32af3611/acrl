@@ -1,0 +1,28 @@
+### CHANGE LOG VERSION HISTORY TEMPLATE####
+Last Update: 16.06.2021
+
+D-LT-A07:
+	Change of result averageing time (3 * alpha_DEG + 6)*c/U_inf
+	Artificial Averageing Timestep 100 --> 1000
+	Apply BLC after steady state step
+	Changed U.orig from noSlip to fixedValue 0 0 0 at wall to allow funkySetBoundaryField
+	
+D-LT-A08:
+    Change of development time: 20 --> 10 flow over times
+    Change of result averageing time (1 * alpha_DEG + 1)*c/U_inf
+    Added Monitor Forces GnuPlotScript
+    increased parallel computation: 16 --> 32 cores
+    Made steadyState Phase longer
+
+D-LT-A09:
+    Wake sampling from D-L-B01
+    Remove LM transitional model --> plain k omega SST
+
+K23n:
+    Recreated K23 setup to run more indepently as orignal one and also compatible with identical control and setup scripts as instationary ones
+    
+K23n2:
+    Changed to bounded Schemes for steadyState simulation for better convergence
+
+RL002:
+    Prepared for implementation of Reinforcemen learning.
